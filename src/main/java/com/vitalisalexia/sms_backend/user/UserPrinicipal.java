@@ -30,7 +30,7 @@ public class UserPrinicipal implements UserDetails {
 
     @Override
     public String getUsername() {
-        System.out.print(user.getUsername()+"***********************the user");
+        System.out.print("--------------------->(UserPriniciplal)get username"+user.getUsername()+"<--------------------------------------");
         return user.getUsername();
     }
 
