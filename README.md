@@ -16,7 +16,7 @@ This is a backend for a student management system.
 
 ```json
 {
-  'id': 1,
+  "id": 1,
   "username": "kiprop",
   "password": "k@123"
 }
