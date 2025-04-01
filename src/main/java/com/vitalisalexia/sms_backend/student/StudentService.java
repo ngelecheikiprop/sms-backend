@@ -12,6 +12,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 import org.apache.poi.ss.usermodel.*;
@@ -58,8 +60,6 @@ public class StudentService {
 
     public void generate(Integer count) {
         //generating student in excel sheet logic
-
-
         System.out.println("\uD83D\uDD25 \uD83D\uDD25 \uD83D\uDD25 \uD83D\uDD25----------------------->Generating " + count + " students\uD83D\uDD25 \uD83D\uDD25 \uD83D\uDD25 \uD83D\uDD25----------------------->");
         Workbook workbook = new XSSFWorkbook();
         Sheet sheet = workbook.createSheet("Students");
@@ -79,10 +79,14 @@ public class StudentService {
             row.createCell(1).setCellValue(randomString());
             row.createCell(2).setCellValue(randomString());
             row.createCell(3).setCellValue(randomDate());
-
+            row.createCell(4).setCellValue(randomClass());
+            row.createCell(5).setCellValue(randomScore());
+            row.createCell(6).setCellValue(1);
+            row.createCell(7).setCellValue("");
         }
 
-        String filePath = "C:\\var\\log\\applications\\API\\dataprocessing\\students.xlsx";
+        String timeStamp = getCurrentTimestamp();
+        String filePath = "C:\\var\\log\\applications\\API\\dataprocessing\\students_"+timeStamp+".xlsx";
 
         File directory = new File("C:\\var\\log\\applications\\API\\dataprocessing\\");
         if (!directory.exists()) {
@@ -96,6 +100,12 @@ public class StudentService {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    private String getCurrentTimestamp() {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd_HH-mm-ss");
+        LocalDateTime now = LocalDateTime.now();
+        return now.format(formatter);
     }
 
     private String randomString(){
@@ -123,5 +133,17 @@ public class StudentService {
         long randomMillis = startMillis + (long) (random.nextDouble() * (endMillis - startMillis));
         System.out.println("--------------------------------------\uD83D\uDD25 \uD83D\uDD25 \uD83D\uDD25 \uD83D\uDD25-----------------------random date: " + randomMillis);
         return new Date(randomMillis);
+    }
+
+    private String randomClass(){
+        String[] classes = {"class1", "class2", "class3", "class4", "class5"};
+        Random random = new Random();
+        int randIndex = random.nextInt(5);
+        return classes[randIndex];
+    }
+
+    private Integer randomScore(){
+        Random random = new Random();
+        return random.nextInt(55) + 31;
     }
 }
