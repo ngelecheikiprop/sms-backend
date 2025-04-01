@@ -44,8 +44,17 @@ public class StudentController {
         return studentService.count();
     }
 
-    @PostMapping("generate/{count}")
+    @PostMapping("generate-excel/{count}")
     public void generate(@PathVariable Integer count){
         studentService.generate(count);
+    }
+
+    @PostMapping("data-process")
+    public void dataProcess(){
+        studentService.processData();
+    }
+
+    @PostMapping("data-upload")
+    public void dataUpload(){
     }
 }

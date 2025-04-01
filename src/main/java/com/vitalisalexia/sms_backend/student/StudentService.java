@@ -5,6 +5,8 @@ package com.vitalisalexia.sms_backend.student;
 
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,12 +20,12 @@ import java.util.*;
 
 import org.apache.poi.ss.usermodel.*;
 
-import javax.swing.plaf.synth.SynthTextAreaUI;
-
 @Service
 public class StudentService {
     @Autowired
     StudentRepo studentRepo;
+
+    final Logger log = LoggerFactory.getLogger(StudentService.class);
 
     public List<Student> getStudents() {
         return studentRepo.findAll();
@@ -85,8 +87,9 @@ public class StudentService {
             row.createCell(7).setCellValue("");
         }
 
-        String timeStamp = getCurrentTimestamp();
-        String filePath = "C:\\var\\log\\applications\\API\\dataprocessing\\students_"+timeStamp+".xlsx";
+        //String timeStamp = getCurrentTimestamp();
+        //String filePath = "C:\\var\\log\\applications\\API\\dataprocessing\\students_"+timeStamp+".xlsx";
+        String filePath = "C:\\var\\log\\applications\\API\\dataprocessing\\students.xlsx";
 
         File directory = new File("C:\\var\\log\\applications\\API\\dataprocessing\\");
         if (!directory.exists()) {
@@ -102,11 +105,11 @@ public class StudentService {
         }
     }
 
-    private String getCurrentTimestamp() {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd_HH-mm-ss");
-        LocalDateTime now = LocalDateTime.now();
-        return now.format(formatter);
-    }
+//    private String getCurrentTimestamp() {
+//        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd_HH-mm-ss");
+//        LocalDateTime now = LocalDateTime.now();
+//        return now.format(formatter);
+//    }
 
     private String randomString(){
         Random random = new Random();
@@ -145,5 +148,40 @@ public class StudentService {
     private Integer randomScore(){
         Random random = new Random();
         return random.nextInt(55) + 31;
+    }
+
+    public void processData() {
+        String filePath = "C:\\var\\log\\applications\\API\\dataprocessing\\students.xlsx";
+        try (FileInputStream fis = new FileInputStream(filePath)){
+            Workbook workbook = new XSSFWorkbook(fis);
+            Sheet sheet = workbook.getSheetAt(0);
+
+            for(Row row : sheet){
+                if(row.getRowNum() == 0){
+                    continue;
+                }
+
+
+
+                Cell cell = row.getCell(5);
+
+                if (cell != null && cell.getCellType() == CellType.NUMERIC)
+                {
+                    double score = cell.getNumericCellValue();
+                    log.info("score is now is {}",score);
+                    cell.setCellValue(score + 10);
+                    log.info("New score is {}", score + 10);
+                }
+            }
+
+            try(FileOutputStream fout = new FileOutputStream(filePath)){
+                workbook.write(fout);
+                log.info("file update");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 }
