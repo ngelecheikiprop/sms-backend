@@ -56,5 +56,6 @@ public class StudentController {
 
     @PostMapping("data-upload")
     public void dataUpload(){
+        studentService.uploadData();
     }
 }

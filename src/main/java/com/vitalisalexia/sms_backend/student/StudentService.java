@@ -104,13 +104,11 @@ public class StudentService {
             e.printStackTrace();
         }
     }
-
 //    private String getCurrentTimestamp() {
 //        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd_HH-mm-ss");
 //        LocalDateTime now = LocalDateTime.now();
 //        return now.format(formatter);
 //    }
-
     private String randomString(){
         Random random = new Random();
         int length = 3 + random.nextInt(6);
@@ -155,16 +153,11 @@ public class StudentService {
         try (FileInputStream fis = new FileInputStream(filePath)){
             Workbook workbook = new XSSFWorkbook(fis);
             Sheet sheet = workbook.getSheetAt(0);
-
             for(Row row : sheet){
                 if(row.getRowNum() == 0){
                     continue;
                 }
-
-
-
                 Cell cell = row.getCell(5);
-
                 if (cell != null && cell.getCellType() == CellType.NUMERIC)
                 {
                     double score = cell.getNumericCellValue();
@@ -173,7 +166,6 @@ public class StudentService {
                     log.info("New score is {}", score + 10);
                 }
             }
-
             try(FileOutputStream fout = new FileOutputStream(filePath)){
                 workbook.write(fout);
                 log.info("file update");
@@ -182,6 +174,77 @@ public class StudentService {
             }
         }catch (Exception e){
             e.printStackTrace();
+        }
+    }
+
+    public void uploadData() {
+        String filePath = "C:\\var\\log\\applications\\API\\dataprocessing\\students.xlsx";
+
+        try (FileInputStream fis = new FileInputStream(filePath)) {
+            Workbook workbook = new XSSFWorkbook(fis);
+            Sheet sheet = workbook.getSheetAt(0);
+
+            for (Row row : sheet) {
+                if (row.getRowNum() == 0) {
+                    continue;
+                }
+
+                // Extract student data
+                Student student = new Student();
+                Cell cell;
+
+                // Extract studentId from the first column (index 0)
+                cell = row.getCell(0);
+                if (cell != null && cell.getCellType() == CellType.NUMERIC) {
+                    student.setId((int) cell.getNumericCellValue());
+                }
+
+                // Extract firstName from the second column (index 1)
+                cell = row.getCell(1);
+                if (cell != null && cell.getCellType() == CellType.STRING) {
+                    student.setFirstName(cell.getStringCellValue());
+                }
+
+                // Extract lastName from the third column (index 2)
+                cell = row.getCell(2);
+                if (cell != null && cell.getCellType() == CellType.STRING) {
+                    student.setLastName(cell.getStringCellValue());
+                }
+
+                // Extract DOB from the fourth column (index 3)
+                cell = row.getCell(3);
+                if (cell != null && cell.getCellType() == CellType.NUMERIC) {
+                    student.setBirthDate(cell.getDateCellValue()); // Assuming it's stored as a String for simplicity
+                }
+
+                // Extract class from the fifth column (index 4)
+                cell = row.getCell(4);
+                if (cell != null && cell.getCellType() == CellType.STRING) {
+                    student.setClassName(cell.getStringCellValue());
+                }
+
+                // Extract score from the sixth column (index 5), and add 5 to it
+                cell = row.getCell(5);
+                if (cell != null && cell.getCellType() == CellType.NUMERIC) {
+                    double score = cell.getNumericCellValue();
+                    student.setScore((int) (score + 5)); // Add 5 to the score
+                    log.info("Original score: {}, Updated score: {}", score, score + 5);
+                }
+
+                // Set default status (Assuming 1 is active, as in your previous code)
+                student.setStatus(1);
+
+                // Set a default photoPath (If needed, you can modify this or leave empty as you did earlier)
+                student.setPhotoPath("");
+
+                // Save the new student to the database
+                studentRepo.save(student);
+                log.info("New student added: {}", student);
+            }
+
+            log.info("Data uploaded successfully from Excel.");
+        }catch (Exception e){
+            log.error("Error processing the Excel file", e);
         }
     }
 }
