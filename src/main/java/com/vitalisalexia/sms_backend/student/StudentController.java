@@ -29,7 +29,7 @@ public class StudentController {
     }
 
     @DeleteMapping("{id}")
-    public void deleteStudent(@PathVariable int id) {
+    public void deleteStudent(@PathVariable Integer id) {
         studentService.delete(id);
     }
 
@@ -38,8 +38,14 @@ public class StudentController {
         return studentService.getStudentById(id);
     }
 
+
     @GetMapping("count")
     public Long countStudents(){
         return studentService.count();
+    }
+
+    @PostMapping("generate/{count}")
+    public void generate(@PathVariable Integer count){
+        studentService.generate(count);
     }
 }

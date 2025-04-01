@@ -19,7 +19,6 @@ import java.util.function.Function;
 @Service
 public class JwtService {
 
-
     private String secretkey="Onz5fS0zKVRu9sfToD4bMUarYBsjOVfntgjQYDN/hik=";
 
 //    public JwtService() {
@@ -32,8 +31,6 @@ public class JwtService {
 //            throw new RuntimeException(e);
 //        }
 //    }
-
-
 
     public boolean validateToken(String token, UserDetails userDetails) {
         final String username = extractUsername(token);
