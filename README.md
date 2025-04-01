@@ -3,8 +3,8 @@
 This is a backend for a student management system.
 ## table of contents
 
-[features](#features)
-[endpoints](#endpoints)
+- [features](#features)
+- [endpoints](#endpoints)
 
 ## features
 
