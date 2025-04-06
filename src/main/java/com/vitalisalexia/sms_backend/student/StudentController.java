@@ -38,7 +38,6 @@ public class StudentController {
         return studentService.getStudentById(id);
     }
 
-
     @GetMapping("count")
     public Long countStudents(){
         return studentService.count();
