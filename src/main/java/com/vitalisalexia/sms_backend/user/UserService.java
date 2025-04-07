@@ -29,12 +29,19 @@ public class UserService {
     }
 
 
-    public String verify(Users user) {
+    public LoginResponse verify(Users user) {
+        LoginResponse loginResponse = new LoginResponse();
         System.out.println("------------------------->Authenticating<---------------------------");
         Authentication authentication =
                 authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword()));
-        if (authentication.isAuthenticated())
-            return jwtService.generateToken(user.username);
-        return "failed";
+        if (authentication.isAuthenticated()){
+            loginResponse.setToken(jwtService.generateToken(user.username));
+            loginResponse.setStatus(000);
+            loginResponse.setMessage("success");
+            return loginResponse;
+        }
+        loginResponse.setStatus(001);
+        loginResponse.setMessage("fail");
+        return loginResponse;
     }
 }

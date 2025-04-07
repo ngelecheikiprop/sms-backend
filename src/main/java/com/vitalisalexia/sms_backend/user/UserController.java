@@ -18,8 +18,8 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public String login(@RequestBody Users user) {
+    public ResponseEntity<LoginResponse> login(@RequestBody Users user) {
         System.out.println("logining user : " + user.username);
-        return userService.verify(user);
+        return ResponseEntity.ok(userService.verify(user));
     }
 }

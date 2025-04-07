@@ -1,6 +1,7 @@
 package com.vitalisalexia.sms_backend.student;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -39,8 +40,8 @@ public class StudentController {
     }
 
     @GetMapping("count")
-    public Long countStudents(){
-        return studentService.count();
+    public ResponseEntity<Long> countStudents(){
+        return ResponseEntity.ok(studentService.count());
     }
 
     @PostMapping("generate-excel/{count}")
