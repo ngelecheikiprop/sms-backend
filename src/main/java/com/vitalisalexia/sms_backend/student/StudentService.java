@@ -8,6 +8,9 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
@@ -27,8 +30,9 @@ public class StudentService {
 
     final Logger log = LoggerFactory.getLogger(StudentService.class);
 
-    public List<Student> getStudents() {
-        return studentRepo.findAll();
+    public Page<Student> getStudents(Integer pageNo, Integer pageSize) {
+        Pageable pageable = PageRequest.of(pageNo, pageSize);
+        return studentRepo.findAll(pageable);
     }
 
     public Student save(Student student) {

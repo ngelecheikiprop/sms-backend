@@ -1,6 +1,7 @@
 package com.vitalisalexia.sms_backend.student;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,8 +16,11 @@ public class StudentController {
     StudentService studentService;
 
     @GetMapping()
-    public List<Student> getStudents(){
-        return studentService.getStudents();
+    public Page<Student> getStudents(
+            @RequestParam(defaultValue = "0") Integer pageNo,
+            @RequestParam(defaultValue = "10") Integer pageSize
+    ){
+        return studentService.getStudents(pageNo, pageSize);
     }
 
     @PostMapping("create")
